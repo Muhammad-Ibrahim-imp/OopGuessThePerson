@@ -1,5 +1,6 @@
 package OOP.Project.Backend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*; //jakarta.persistence = tools to connect your Java classes with a database
 import lombok.Data; //@Data is a shortcut annotation in Lombok that automatically generates:
 
@@ -50,6 +51,10 @@ public class Room {
     // CascadeType.ALL     → deleting a room also deletes all its players
     // FetchType.EAGER     → always load the players list when loading a room
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    // @JsonManagedReference marks this as the "parent" side of the relationship
+    // Jackson will serialize this side normally
+    //Prevents infinite recursions
     private List<Player> players = new ArrayList<>();
 
     // Three possible states for a room

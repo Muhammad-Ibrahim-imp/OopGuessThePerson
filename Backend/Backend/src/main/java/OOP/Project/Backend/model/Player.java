@@ -1,5 +1,7 @@
 package OOP.Project.Backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -35,5 +37,9 @@ public class Player {
     // @JoinColumn    → creates a "room_id" foreign key column in the players table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
+    @JsonBackReference
+    // @JsonBackReference marks this as the "child" side
+    // Jackson will NOT serialize this side — preventing the infinite loop
+    //Prevents infinite recursions
     private Room room;
 }
