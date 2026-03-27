@@ -2,10 +2,11 @@ package OOP.Project.Backend.dto;
 
 import lombok.Data;
 
-// DTO = Data Transfer Object
-// Represents the exact JSON shape Android sends when creating a room:
-// { "hostName": "Ali" }
+// Sent when host creates a room
+// Now includes game configuration settings
 @Data
 public class CreateRoomRequest {
     private String hostName;
+    private int maxQuestions;         // 0 = no limit (one question per player)
+    private int questionTimerSeconds; // seconds per question (minimum 5)
 }
