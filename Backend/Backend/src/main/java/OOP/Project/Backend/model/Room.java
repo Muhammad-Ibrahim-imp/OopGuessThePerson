@@ -46,6 +46,20 @@ public class Room {
     // Tracks which question (0-based index) is currently being shown
     private int currentQuestionIndex = 0;
 
+    // Maximum number of questions host wants to play
+    // 0 means play all (one per player)
+    private int maxQuestions = 0;
+
+    // Timer duration in seconds for each question (set by host)
+    // Default 30 seconds
+    private int questionTimerSeconds = 30;
+
+    // Tracks which player indices have already been used as question subjects
+    // Stored as comma-separated string e.g. "0,2,4"
+    // This ensures questions are never repeated
+    @Column(length = 1000)
+    private String usedQuestionIndices = "";
+
     // One Room → Many Players relationship
     // mappedBy="room"     → the Player class owns this via its "room" field
     // CascadeType.ALL     → deleting a room also deletes all its players

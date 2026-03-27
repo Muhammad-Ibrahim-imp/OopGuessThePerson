@@ -22,4 +22,7 @@ public class Question {
 
     // Total number of questions = total number of players
     private int totalQuestions;
+
+    private int timerSeconds;        // how many seconds players have to answer
+    private Long factOwnerPlayerId;  // ID of the player whose fact this is
 }

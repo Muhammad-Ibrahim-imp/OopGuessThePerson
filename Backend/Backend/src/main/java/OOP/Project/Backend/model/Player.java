@@ -32,6 +32,11 @@ public class Player {
     // Reset to false at the start of every new question
     private boolean hasAnswered = false;
 
+    // Stores how long this player took to answer in milliseconds
+    // Used to calculate time-based bonus points
+    // -1 means they haven't answered yet (default)
+    private long answerTimeMs = -1;
+
     // Many Players → One Room
     // FetchType.LAZY → only load the Room data when we explicitly need it
     // @JoinColumn    → creates a "room_id" foreign key column in the players table

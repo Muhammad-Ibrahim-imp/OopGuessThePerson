@@ -41,6 +41,7 @@ android {
 // copied- will study it later
 dependencies {
 
+    implementation(libs.androidx.room.ktx)
     // ── Jetpack Compose BOM ───────────────────────────────────
     // BOM pins all Compose versions to be mutually compatible
     val composeBom = platform("androidx.compose:compose-bom:2023.10.01")
