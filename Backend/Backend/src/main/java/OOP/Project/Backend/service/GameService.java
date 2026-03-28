@@ -24,16 +24,44 @@ public class GameService {
 
     // Called when the host taps "Start Game"
     // Changes status to IN_PROGRESS and returns the first question
-    public Question startGame(String roomCode) {
+    public Question startGame(String roomCode, SimpMessagingTemplate template) {
         Room room = roomRepository.findByRoomCode(roomCode)
                 .orElseThrow(()-> new RuntimeException("Room not found"));
 
+        if (room.getPlayers().isEmpty()) {
+            throw new RuntimeException("Cannot start with no players");
+        }
+
+        // Validate host has set their fun fact
+        room.getPlayers().stream()
+                .filter(p -> p.getName().equals(room.getHostName()))
+                .findFirst()
+                .ifPresent(host -> {
+                    if (host.getFunFact().equals("Host's fun fact pending")) {
+                        throw new RuntimeException("Host must set their fun fact before starting");
+                    }
+                });
+
         // Change from WAITING → IN_PROGRESS and persist to MySQL
         room.setStatus(Room.RoomStatus.IN_PROGRESS);
+        room.setUsedQuestionIndices(""); // reset used indices // smjh nhin ayee
         roomRepository.save(room);
 
-        // Build and return question 0 (the first question)
-        return buildQuestion(room, 0);
+        // Determine total number of questions
+        // maxQuestions = 0 means one question per player (no limit)
+        int totalPlayers = room.getPlayers().size();
+        int totalQuestions = room.getMaxQuestions() > 0
+                ? Math.min(room.getMaxQuestions(), totalPlayers)
+                : totalPlayers;
+
+        // Build and return the first randomly selected question
+        Question first = buildNextQuestion(room, totalQuestions);
+        if (first != null) {
+            // Record when this question started
+            questionStartTimes.put(roomCode, System.currentTimeMillis());
+            scheduleTimer(roomCode, room.getQuestionTimerSeconds(), template);
+        }
+        return first;
     }
 
     public Question buildQuestion(Room room, int questionIndex) {
