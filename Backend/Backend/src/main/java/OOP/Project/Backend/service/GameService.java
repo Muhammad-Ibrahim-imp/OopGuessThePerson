@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -13,6 +14,13 @@ import java.util.stream.Collectors;
 public class GameService {
     private final RoomRepository roomRepository;
     private final PlayerRepository playerRepository;
+
+    // Tracks when each question started (roomCode → start time in ms)
+    // Used to calculate how long each player took to answer
+    private final Map<String, Long> questionStartTimes = new ConcurrentHashMap<>();
+
+    // Tracks scheduled timer tasks (roomCode → timer thread)
+    private final Map<String, Timer> questionTimers = new ConcurrentHashMap<>();
 
     // Called when the host taps "Start Game"
     // Changes status to IN_PROGRESS and returns the first question
