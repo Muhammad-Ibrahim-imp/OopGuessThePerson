@@ -30,9 +30,12 @@ public class RoomService {
                 .substring(0, 6)
                 .toUpperCase();
 
-        // Validate timer — minimum 5 seconds, default 30 if not provided
+        // New validation — only 5, 10, or 15 are accepted
+// Any other value defaults to 10 seconds
         int timer = request.getQuestionTimerSeconds();
-        if (timer < 5) timer = 30;
+        if (timer != 5 && timer != 10 && timer != 15) {
+            timer = 10; // default to 10 if an invalid value somehow arrives
+        }
 
         Room room = new Room();
         room.setRoomCode(roomCode);
