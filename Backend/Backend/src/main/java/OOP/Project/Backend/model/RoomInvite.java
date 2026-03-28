@@ -1,4 +1,4 @@
 package OOP.Project.Backend.model;
 
-public class Friendship {
+public class RoomInvite {
 }
