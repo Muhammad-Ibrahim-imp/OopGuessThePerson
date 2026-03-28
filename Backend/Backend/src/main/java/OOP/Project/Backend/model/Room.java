@@ -51,8 +51,7 @@ public class Room {
     private int maxQuestions = 0;
 
     // Timer duration in seconds for each question (set by host)
-    // Default 30 seconds
-    private int questionTimerSeconds = 30;
+    private int questionTimerSeconds = 10
 
     // Tracks which player indices have already been used as question subjects
     // Stored as comma-separated string e.g. "0,2,4"

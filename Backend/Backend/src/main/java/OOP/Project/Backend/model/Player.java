@@ -37,6 +37,14 @@ public class Player {
     // -1 means they haven't answered yet (default)
     private long answerTimeMs = -1;
 
+    private int correctAnswers = 0;
+
+    // Link to the registered user account (null for guest players)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+
     // Many Players → One Room
     // FetchType.LAZY → only load the Room data when we explicitly need it
     // @JoinColumn    → creates a "room_id" foreign key column in the players table
