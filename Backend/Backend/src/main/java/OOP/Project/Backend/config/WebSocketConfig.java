@@ -31,15 +31,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer { //Web
                 .withSockJS();
     }
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) { //This method is used to define how messages are routed inside your WebSocket system.
-        // /topic/... → server BROADCASTS to ALL subscribers
-        // e.g. /topic/game/ABC123 sends to every player in room ABC123
-        registry.enableSimpleBroker("/topic"); // Enables a built-in message broker inside Spring.
-        //A broker is a middleman that: Receives messages, Sends them to all subscribed clients
-
-        // /app/... → messages FROM clients that the server processes
-        // e.g. Android sends to /app/game/ABC123/answer
-        registry.setApplicationDestinationPrefixes("/app"); //Defines prefix for messages coming FROM clients
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/topic", "/queue");
+        // /queue is for user-specific messages (invite notifications)
+        registry.setApplicationDestinationPrefixes("/app");
+        registry.setUserDestinationPrefix("/user");
     }
-    // configureMessageBroker() defines how messages flow by separating client-to-server (/app) requests from server-to-client (/topic) broadcasts using a message broker.
 }
