@@ -54,8 +54,10 @@ public class RoomService {
         // For now set a placeholder — host must update this before starting
         hostPlayer.setFunFact("Host's fun fact pending");
         hostPlayer.setRoom(savedRoom);
-        playerRepository.save(hostPlayer);
+        // Link to user account if authenticated
+        userRepository.findByUsername(username).ifPresent(hostPlayer::setUser);
 
+        playerRepository.save(hostPlayer);
         return roomRepository.findByRoomCode(roomCode).get();
     }
 
@@ -87,9 +89,9 @@ public class RoomService {
         player.setFunFact(funFact);
         player.setRoom(room); // this sets the room_id foreign key in MySQL
 
-        playerRepository.save(player);
+        userRepository.findByUsername(username).ifPresent(player::setUser);
 
-        // Reload the room so the returned object includes the new player
+        playerRepository.save(player);
         return roomRepository.findByRoomCode(roomCode).get();
     }
 

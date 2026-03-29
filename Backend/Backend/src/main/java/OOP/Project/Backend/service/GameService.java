@@ -17,6 +17,7 @@ public class GameService {
 
     private final RoomRepository roomRepository;
     private final PlayerRepository playerRepository;
+    private final GameHistoryService gameHistoryService;
 
     // Tracks when each question started (roomCode → start time in ms)
     // Used to calculate how long each player took to answer
@@ -80,13 +81,8 @@ public class GameService {
         }
 
         // No more unused players — game should end
-        if (availableIndices.isEmpty()) return null;
-
-        // How many questions have been asked so far
-        int questionsAsked = usedIndices.size();
-
-        // Stop if we've reached the question limit
-        if (questionsAsked >= totalQuestions) return null;
+        if (available.isEmpty() || usedIndices.size() >= totalQuestions) return null;
+        
 
         // Pick a RANDOM available index — this is the key change
         // so questions are never predictable or sequential
