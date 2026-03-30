@@ -82,7 +82,7 @@ public class GameService {
 
         // No more unused players — game should end
         if (available.isEmpty() || usedIndices.size() >= totalQuestions) return null;
-        
+
 
         // Pick a RANDOM available index — this is the key change
         // so questions are never predictable or sequential
